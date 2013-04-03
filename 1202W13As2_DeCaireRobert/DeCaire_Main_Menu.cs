@@ -12,8 +12,10 @@ namespace _1202W13As2_DeCaireRobert
 {
     public partial class DeCaire_Main_Menu : Form
     {
+        public static List<DeCaire_Airport_Report> reportList = new List<DeCaire_Airport_Report>();
         public DeCaire_Main_Menu()
         {
+            
             InitializeComponent();
         }
 
