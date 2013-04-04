@@ -12,7 +12,7 @@ namespace _1202W13As2_DeCaireRobert
 {
     public partial class DeCaire_Main_Menu : Form
     {
-        public static List<DeCaire_Airport_Report> reportList = new List<DeCaire_Airport_Report>();
+        internal static List<DeCaire_Airport_Report> reportList = new List<DeCaire_Airport_Report>();
         public DeCaire_Main_Menu()
         {
             
@@ -26,7 +26,15 @@ namespace _1202W13As2_DeCaireRobert
 
         private void button1_Click(object sender, EventArgs e)
         {
-            new Form2().Show();
+            new DeCaire_New_Record().Show();
+        }
+
+        private void DeCaire_Main_Menu_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to exit?", "Confirm exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

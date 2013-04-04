@@ -55,19 +55,28 @@
     <Compile Include="DeCaire_Main_Menu.Designer.cs">
       <DependentUpon>DeCaire_Main_Menu.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form2.cs">
+    <Compile Include="DeCaire_New_Record.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="DeCaire_New_Record.Designer.cs">
+      <DependentUpon>DeCaire_New_Record.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DeCaire_Report_Display.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeCaire_Report_Display.Designer.cs">
+      <DependentUpon>DeCaire_Report_Display.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="DeCaire_Main_Menu.resx">
       <DependentUpon>DeCaire_Main_Menu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="DeCaire_New_Record.resx">
+      <DependentUpon>DeCaire_New_Record.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeCaire_Report_Display.resx">
+      <DependentUpon>DeCaire_Report_Display.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

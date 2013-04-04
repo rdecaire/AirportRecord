@@ -1,6 +1,6 @@
 ﻿namespace _1202W13As2_DeCaireRobert
 {
-    partial class Form2
+    partial class DeCaire_New_Record
     {
         /// <summary>
         /// Required designer variable.

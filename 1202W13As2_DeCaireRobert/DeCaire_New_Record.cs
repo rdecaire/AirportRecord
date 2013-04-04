@@ -11,13 +11,13 @@ using System.Text.RegularExpressions;
 
 namespace _1202W13As2_DeCaireRobert
 {
-    public partial class Form2 : Form
+    public partial class DeCaire_New_Record : Form
     {
         int arrivals;
         int passengers;
         DeCaire_Airport_API airport = new DeCaire_Airport_API();
 
-        public Form2()
+        public DeCaire_New_Record()
         {
             InitializeComponent();
         }

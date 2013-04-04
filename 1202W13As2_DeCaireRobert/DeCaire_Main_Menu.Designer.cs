@@ -78,6 +78,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "DeCaire_Main_Menu";
             this.Text = "Airport Records";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DeCaire_Main_Menu_FormClosing);
             this.ResumeLayout(false);
 
         }
