@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 //using System.Collections.Specialized;
 
 namespace _1202W13As2_DeCaireRobert
@@ -16,13 +17,13 @@ namespace _1202W13As2_DeCaireRobert
         public DeCaire_Report_Display(List<DeCaire_Airport_Report> reportList)
         {
             InitializeComponent();
-            displayReport(reportList);
+            displayReport(collateReport(reportList));
         }
         
-        private void displayReport(List<DeCaire_Airport_Report> reportList)
+        private Dictionary<string, Dictionary<string, object>> collateReport(List<DeCaire_Airport_Report> reportList)
         {
-            string reportContainer = "Airport Report\n\n**********\n";
-            Dictionary<string, Dictionary<string, object>> airCodeDict = null;
+            
+            Dictionary<string, Dictionary<string, object>> airCodeDict = new Dictionary<string,Dictionary<string,object>>();
             foreach (DeCaire_Airport_Report report in reportList)
             {
                 // create a dictionary of airport codes
@@ -33,9 +34,15 @@ namespace _1202W13As2_DeCaireRobert
                     //As the value of that key, set a second dictionary
                     Dictionary<string, object> subDict = new Dictionary<string, object>();
                     airCodeDict[report.AirportCode] = subDict;
+                    //Add the airport information to the dictionary
+                    subDict.Add("airportName", report.AirportName);
+                    subDict.Add("airportCity", report.AirportCity);
+                    subDict.Add("airportState", report.AirportState);
+                    subDict.Add("airportCountry", report.AirportCountry);
+
                     //Add the date and number of flights
                     subDict.Add("highestFlightDate", report.Date);
-                    subDict.Add("highestFlightCount", report.NumArrivals + report.NumDepartures);
+                    subDict.Add("highestFlightCount", (report.NumArrivals + report.NumDepartures));
                     //Add the date and number of passengers
                     subDict.Add("highestPassengerDate", report.Date);
                     subDict.Add("highestPassengerCount", report.NumPassengers);
@@ -50,10 +57,10 @@ namespace _1202W13As2_DeCaireRobert
                     //one, and update it if it did.
 
                     int highestFlightCount = (int)airCodeDict[report.AirportCode]["highestFlightCount"];
-                    if (report.NumArrivals + report.NumDepartures > highestFlightCount)
+                    if ((report.NumArrivals + report.NumDepartures) > highestFlightCount)
                     {
                         airCodeDict[report.AirportCode]["highestFlightDate"] = report.Date;
-                        airCodeDict[report.AirportCode]["highestFlightCount"] = report.NumArrivals + report.NumDepartures;
+                        airCodeDict[report.AirportCode]["highestFlightCount"] = (report.NumArrivals + report.NumDepartures);
                     }
 
                     // And check whether this report had the highest number of passengers so far,
@@ -86,7 +93,66 @@ namespace _1202W13As2_DeCaireRobert
                 airCodeDict[report.AirportCode]["averagePassengers"] = numPassengers.Average();
             }
 
+            return airCodeDict;
+        }
 
+        private void displayReport(Dictionary<string, Dictionary<string,object>> airCodeDict)
+        {
+            var codeList = airCodeDict.Keys.ToList();
+            codeList.Sort();
+            string code=null, airportLocation=null, airportName=null, city=null, country=null, province=null;
+            string[] addressWords;
+            DeCaire_Airport_API airport = new DeCaire_Airport_API();
+            string reportContainer = "Airport Report\n\n**********\n";
+            
+            foreach (string airportCode in codeList)
+            {
+                Call airDetails = airport.GetCall(airportCode);
+                if (!String.IsNullOrEmpty(airDetails.code) && !String.IsNullOrEmpty(airDetails.location) && !String.IsNullOrEmpty(airDetails.name))
+                {
+                    code = airDetails.code;
+                    airportLocation = airDetails.location;
+                    airportName = airDetails.name;
+                    addressWords = Regex.Split(airportLocation, ", ");
+                    city = addressWords[0];
+                    country = addressWords[addressWords.Length - 1];
+                    if (addressWords.Length == 3)
+                    {
+                        province = addressWords[1];
+
+                    }
+                    else
+                    {
+                        province = "";
+                    }
+
+                }
+                else
+                {
+                    code = airportCode;
+                    airportName = (string)airCodeDict[code]["airportName"];
+                    city = (string)airCodeDict[code]["airportCity"];
+                    country = (string)airCodeDict[code]["airportCountry"];
+                    province = (string)airCodeDict[code]["airportState"];
+                }
+            
+                //build into reportcontainer here...
+                reportContainer += ("Airport: " + code + "\nLocation: " + city + ", ");
+                if (province != null)
+                {
+                    reportContainer += (province + ", ");
+                }
+            
+                reportContainer += (country + "/n" +
+                    "Maximum number of flights in one day: " + ((int)airCodeDict[code]["highestFlightCount"]).ToString() + "\n" +
+                    "Date of maximum flights: " + ((DateTime)airCodeDict[code]["highestFlightDate"]).ToString("MMMM dd, yyyy") + "\n");
+            
+                reportContainer += ("Maximum number of passengers in one day: " + ((int)airCodeDict[code]["highestPassengerCount"]).ToString() + "\n" +
+                    "Date of maximum passengers: " + ((DateTime)airCodeDict[code]["highestPassengerDate"]).ToString("MMMM dd, yyyy") + "\n");
+                double averagePassengers = (double)airCodeDict[code]["averagePassengers"];
+                reportContainer += ("Average number of passengers each day: " + averagePassengers.ToString());
+            }
+            textBox1.Text = reportContainer;
         }
 
         private void button2_Click(object sender, EventArgs e)

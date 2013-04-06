@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace _1202W13As2_DeCaireRobert
 {
-    class DeCaire_Airport_Report
+    public class DeCaire_Airport_Report
     {
         string airportCode, airportName, airportCity, airportState, airportCountry;
         DateTime date;

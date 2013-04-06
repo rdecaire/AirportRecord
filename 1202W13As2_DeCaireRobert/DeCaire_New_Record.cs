@@ -83,7 +83,7 @@ namespace _1202W13As2_DeCaireRobert
             report.Date = dateTimePicker1.Value;
             report.NumArrivals = int.Parse(textBox6.Text);
             report.NumDepartures = int.Parse(textBox7.Text);
-            report.NumPassengers = int.Parse(textBox7.Text);
+            report.NumPassengers = int.Parse(textBox8.Text);
             DeCaire_Main_Menu.reportList.Add(report);
             MessageBox.Show("Report entered successfully.");
             this.Close();
@@ -95,27 +95,34 @@ namespace _1202W13As2_DeCaireRobert
         {
             if (textBox1.Text.Length == 3)
             {
-                Call airDetails = airport.GetCall(textBox1.Text);
-                if (!String.IsNullOrEmpty(airDetails.code) && !String.IsNullOrEmpty(airDetails.location) && !String.IsNullOrEmpty(airDetails.name))
+                try
                 {
-                    string code = airDetails.code;
-                    string airportLocation = airDetails.location;
-                    string airportName = airDetails.name;
-                    string[] addressWords = Regex.Split(airportLocation, ", ");
-                    string city = addressWords[0];
-                    string country = addressWords[addressWords.Length - 1];
-                    if (addressWords.Length == 3)
+                    Call airDetails = airport.GetCall(textBox1.Text);
+                    if (!String.IsNullOrEmpty(airDetails.code) && !String.IsNullOrEmpty(airDetails.location) && !String.IsNullOrEmpty(airDetails.name))
                     {
-                        string province = addressWords[1];
-                        textBox4.Text = province;
+                        string code = airDetails.code;
+                        string airportLocation = airDetails.location;
+                        string airportName = airDetails.name;
+                        string[] addressWords = Regex.Split(airportLocation, ", ");
+                        string city = addressWords[0];
+                        string country = addressWords[addressWords.Length - 1];
+                        if (addressWords.Length == 3)
+                        {
+                            string province = addressWords[1];
+                            textBox4.Text = province;
+                        }
+                        else
+                        {
+                            textBox4.Text = "";
+                        }
+                        textBox2.Text = airportName;
+                        textBox3.Text = city;
+                        textBox5.Text = country;
                     }
-                    else
-                    {
-                        textBox4.Text = "";
-                    }
-                    textBox2.Text = airportName;
-                    textBox3.Text = city;
-                    textBox5.Text = country;
+                }
+                catch
+                {
+                    // don't fill anything in.
                 }
                  
             }
@@ -133,6 +140,16 @@ namespace _1202W13As2_DeCaireRobert
             {
                 e.Cancel = true;
             }
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            label10.Text = dateTimePicker1.Value.ToString("MMMM dd, yyyy");
         }
     }
 }

@@ -36,5 +36,10 @@ namespace _1202W13As2_DeCaireRobert
                 e.Cancel = true;
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            new DeCaire_Report_Display(reportList).Show();
+        }
     }
 }
