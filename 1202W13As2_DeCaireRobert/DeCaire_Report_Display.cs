@@ -8,12 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
-//using System.Collections.Specialized;
+
 
 namespace _1202W13As2_DeCaireRobert
 {
     public partial class DeCaire_Report_Display : Form
     {
+        
         public DeCaire_Report_Display(List<DeCaire_Airport_Report> reportList)
         {
             InitializeComponent();
@@ -27,6 +28,9 @@ namespace _1202W13As2_DeCaireRobert
             foreach (DeCaire_Airport_Report report in reportList)
             {
                 // create a dictionary of airport codes
+                // This is my favourite part of the code.  I had to learn how to use Dictionary<T,T> and
+                // the object class in order to get this to work properly.
+
                 bool isAlreadyInDict = airCodeDict.ContainsKey(report.AirportCode);
                 if (!isAlreadyInDict)
                 {
@@ -96,63 +100,77 @@ namespace _1202W13As2_DeCaireRobert
             return airCodeDict;
         }
 
-        private void displayReport(Dictionary<string, Dictionary<string,object>> airCodeDict)
+        private void displayReport(Dictionary<string, Dictionary<string, object>> airCodeDict)
         {
             var codeList = airCodeDict.Keys.ToList();
             codeList.Sort();
-            string code=null, airportLocation=null, airportName=null, city=null, country=null, province=null;
+            string code = null, airportLocation = null, airportName = null, city = null, country = null, province = null;
             string[] addressWords;
             DeCaire_Airport_API airport = new DeCaire_Airport_API();
-            string reportContainer = "Airport Report\n\n**********\n";
-            
+            string reportContainer = "Airport Report\r\n\r\n**********\r\n";
+
             foreach (string airportCode in codeList)
             {
-                Call airDetails = airport.GetCall(airportCode);
-                if (!String.IsNullOrEmpty(airDetails.code) && !String.IsNullOrEmpty(airDetails.location) && !String.IsNullOrEmpty(airDetails.name))
+                try
                 {
-                    code = airDetails.code;
-                    airportLocation = airDetails.location;
-                    airportName = airDetails.name;
-                    addressWords = Regex.Split(airportLocation, ", ");
-                    city = addressWords[0];
-                    country = addressWords[addressWords.Length - 1];
-                    if (addressWords.Length == 3)
+                    Call airDetails = airport.GetCall(airportCode);
+                    if (!String.IsNullOrEmpty(airDetails.code) && !String.IsNullOrEmpty(airDetails.location) && !String.IsNullOrEmpty(airDetails.name))
                     {
-                        province = addressWords[1];
+                        code = airDetails.code;
+                        airportLocation = airDetails.location;
+                        airportName = airDetails.name;
+                        addressWords = Regex.Split(airportLocation, ", ");
+                        city = addressWords[0];
+                        country = addressWords[addressWords.Length - 1];
+                        if (addressWords.Length == 3)
+                        {
+                            province = addressWords[1];
+
+                        }
+                        else
+                        {
+                            province = "";
+                        }
 
                     }
-                    else
-                    {
-                        province = "";
-                    }
-
                 }
-                else
+                 catch
                 {
+                    
                     code = airportCode;
                     airportName = (string)airCodeDict[code]["airportName"];
                     city = (string)airCodeDict[code]["airportCity"];
                     country = (string)airCodeDict[code]["airportCountry"];
                     province = (string)airCodeDict[code]["airportState"];
                 }
-            
-                //build into reportcontainer here...
-                reportContainer += ("Airport: " + code + "\nLocation: " + city + ", ");
-                if (province != null)
+                finally
                 {
-                    reportContainer += (province + ", ");
+
+                    //build into reportcontainer here...
+                    reportContainer += ("Airport: " + code + "\r\n" + airportName + "\r\n" + city + ", ");
+                    if (province != null)
+                    {
+                        reportContainer += (province + ", ");
+                    }
+
+                    reportContainer += (country + "\r\n\r\n" +
+                        "Maximum number of flights in one day: " + ((int)airCodeDict[code]["highestFlightCount"]).ToString() + "\r\n" +
+                        "Date of maximum flights: " + ((DateTime)airCodeDict[code]["highestFlightDate"]).ToString("MMMM dd, yyyy") + "\r\n\r\n");
+
+                    reportContainer += ("Maximum number of passengers in one day: " + ((int)airCodeDict[code]["highestPassengerCount"]).ToString() + "\r\n" +
+                        "Date of maximum passengers: " + ((DateTime)airCodeDict[code]["highestPassengerDate"]).ToString("MMMM dd, yyyy") + "\r\n\r\n");
+                    double averagePassengers = (double)airCodeDict[code]["averagePassengers"];
+                    reportContainer += ("Average number of passengers each day: " + averagePassengers.ToString("F0"));
+                    
+                    if (codeList.IndexOf(airportCode) != (codeList.Count - 1))
+                    {
+                        reportContainer += "\r\n\r\n";
+                    }
                 }
-            
-                reportContainer += (country + "/n" +
-                    "Maximum number of flights in one day: " + ((int)airCodeDict[code]["highestFlightCount"]).ToString() + "\n" +
-                    "Date of maximum flights: " + ((DateTime)airCodeDict[code]["highestFlightDate"]).ToString("MMMM dd, yyyy") + "\n");
-            
-                reportContainer += ("Maximum number of passengers in one day: " + ((int)airCodeDict[code]["highestPassengerCount"]).ToString() + "\n" +
-                    "Date of maximum passengers: " + ((DateTime)airCodeDict[code]["highestPassengerDate"]).ToString("MMMM dd, yyyy") + "\n");
-                double averagePassengers = (double)airCodeDict[code]["averagePassengers"];
-                reportContainer += ("Average number of passengers each day: " + averagePassengers.ToString());
+                
+                textBox1.Text = reportContainer;
+
             }
-            textBox1.Text = reportContainer;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -166,6 +184,11 @@ namespace _1202W13As2_DeCaireRobert
             {
                 e.Cancel = true;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(textBox1.Text);
         }
     
     }

@@ -12,11 +12,14 @@ namespace _1202W13As2_DeCaireRobert
 {
     public partial class DeCaire_Main_Menu : Form
     {
+        DeCaire_Airport_API airport = new DeCaire_Airport_API();
         internal static List<DeCaire_Airport_Report> reportList = new List<DeCaire_Airport_Report>();
+        
         public DeCaire_Main_Menu()
         {
             
             InitializeComponent();
+            
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -40,6 +43,13 @@ namespace _1202W13As2_DeCaireRobert
         private void button2_Click(object sender, EventArgs e)
         {
             new DeCaire_Report_Display(reportList).Show();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string searchText = textBox1.Text;
+            CallList searchReturn = airport.SearchAirCode(searchText);
+            new DeCaire_Search_Result(searchReturn).Show();
         }
     }
 }

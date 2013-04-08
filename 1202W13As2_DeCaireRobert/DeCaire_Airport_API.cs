@@ -12,7 +12,7 @@ namespace _1202W13As2_DeCaireRobert
         // This class uses the RestSharp library (restsharp.org) to request and catch RESTful API data
         // from Airport Code at airportcode.riobard.com
         
-        const string BaseUrl = "http://airportcode.riobard.com/airport/";
+        const string BaseUrl = "http://airportcode.riobard.com/";
         
         public DeCaire_Airport_API()
         {
@@ -36,7 +36,7 @@ namespace _1202W13As2_DeCaireRobert
         {
             string airCode = airportCode;
             var request = new RestRequest();
-            request.Resource = "{AirCode}?fmt=JSON";
+            request.Resource = "airport/{AirCode}?fmt=JSON";
             request.AddParameter("AirCode", airCode, ParameterType.UrlSegment);
             //request.RootElement = "Call";
 
@@ -45,6 +45,17 @@ namespace _1202W13As2_DeCaireRobert
             return Execute<Call>(request);
         }
 
+        public CallList SearchAirCode(string searchString)
+        {
+            var request = new RestRequest();
+            request.Resource = "search?q={Search}&fmt=JSON";
+            request.AddParameter("Search", searchString, ParameterType.UrlSegment);
+            return Execute<CallList>(request);
+        }
+    }
+
+    public class CallList : List<Call> 
+    {
     }
 
     public class Call

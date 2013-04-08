@@ -67,6 +67,12 @@
     <Compile Include="DeCaire_Report_Display.Designer.cs">
       <DependentUpon>DeCaire_Report_Display.cs</DependentUpon>
     </Compile>
+    <Compile Include="DeCaire_Search_Result.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeCaire_Search_Result.Designer.cs">
+      <DependentUpon>DeCaire_Search_Result.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="DeCaire_Main_Menu.resx">
@@ -77,6 +83,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DeCaire_Report_Display.resx">
       <DependentUpon>DeCaire_Report_Display.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeCaire_Search_Result.resx">
+      <DependentUpon>DeCaire_Search_Result.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
