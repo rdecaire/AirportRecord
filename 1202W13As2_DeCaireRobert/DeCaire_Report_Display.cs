@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 
-
 namespace _1202W13As2_DeCaireRobert
 {
     public partial class DeCaire_Report_Display : Form
@@ -169,7 +168,7 @@ namespace _1202W13As2_DeCaireRobert
                 }
                 
                 textBox1.Text = reportContainer;
-
+                textBox1.Select(0, 0);
             }
         }
 

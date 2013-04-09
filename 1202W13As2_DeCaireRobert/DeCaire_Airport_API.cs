@@ -38,10 +38,6 @@ namespace _1202W13As2_DeCaireRobert
             var request = new RestRequest();
             request.Resource = "airport/{AirCode}?fmt=JSON";
             request.AddParameter("AirCode", airCode, ParameterType.UrlSegment);
-            //request.RootElement = "Call";
-
-            //request.AddParameter("CallSid", callSid, ParameterType.UrlSegment);
-
             return Execute<Call>(request);
         }
 
